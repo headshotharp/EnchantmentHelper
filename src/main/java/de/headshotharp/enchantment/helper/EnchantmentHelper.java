@@ -2,10 +2,8 @@ package de.headshotharp.enchantment.helper;
 
 import org.bukkit.enchantments.Enchantment;
 
-import de.headshotharp.commonutils.CommonUtils;
-
-public enum EnchantmentHelper
-{
+public enum EnchantmentHelper {
+	// @formatter:off
 	PROTECTION_ENVIRONMENTAL(Enchantment.PROTECTION_ENVIRONMENTAL, 4, "Protection", "Schutz", "Erhöht den Schutz von Rüstungen."),
 	PROTECTION_FIRE(Enchantment.PROTECTION_FIRE, 4, "Fire Protection", "Feuerschutz", "Erhöht den Schutz gegen Feuer. Reduziert außerdem die Dauer, wie lange man brennt."),
 	PROTECTION_FALL(Enchantment.PROTECTION_FALL, 4, "Feather Falling", "Federfall", "Vermindert den Fallschaden."),
@@ -36,6 +34,7 @@ public enum EnchantmentHelper
 	BINDING_CURSE(Enchantment.BINDING_CURSE, 1, "Curse of Binding", "Fluch der Bindung", "Verhindert das Herausnehmen des Gegenstandes aus dem Rüstungsslot."),
 	SWEEPING_EDGE(Enchantment.SWEEPING_EDGE, 3, "Sweeping", "Schwungkraft", "Der Schwungschlag von Schwertern macht mehr Schaden."),
 	VANISHING_CURSE(Enchantment.VANISHING_CURSE, 1, "Curse of Vanishing", "Fluch des Verschwindens", "Lässt Gegenstände beim Tod nicht fallen, sondern verschwinden.");
+	// @formatter:on
 
 	private Enchantment ench;
 	private String name;
@@ -43,8 +42,7 @@ public enum EnchantmentHelper
 	private String desc;
 	private int maxlevel;
 
-	private EnchantmentHelper(Enchantment ench, int maxlevel, String name, String german, String desc)
-	{
+	private EnchantmentHelper(Enchantment ench, int maxlevel, String name, String german, String desc) {
 		this.ench = ench;
 		this.name = name;
 		this.german = german;
@@ -52,38 +50,31 @@ public enum EnchantmentHelper
 		this.maxlevel = maxlevel;
 	}
 
-	public Enchantment getEnchantment()
-	{
+	public Enchantment getEnchantment() {
 		return ench;
 	}
 
-	public String getTrivialName()
-	{
+	public String getTrivialName() {
 		return name;
 	}
 
-	public int getMaxLevel()
-	{
+	public int getMaxLevel() {
 		return maxlevel;
 	}
 
-	public String getGermanTrivialName()
-	{
+	public String getGermanTrivialName() {
 		return german;
 	}
 
-	public String getGermanDescription()
-	{
+	public String getGermanDescription() {
 		return desc;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return ench.getName();
 	}
 
-	public String getEnumName()
-	{
+	public String getEnumName() {
 		return name();
 	}
 
@@ -92,32 +83,98 @@ public enum EnchantmentHelper
 	 * 
 	 * @return
 	 */
-	public String getNormalName()
-	{
-		return getTrivialName() + " " + CommonUtils.IntToRoman(getMaxLevel());
+	public String getNormalName() {
+		return getTrivialName() + " " + intToRoman(getMaxLevel());
 	}
 
-	public static EnchantmentHelper byName(String name)
-	{
-		for (EnchantmentHelper e : values())
-		{
-			if (e.name().equalsIgnoreCase(name)) return e;
+	public static EnchantmentHelper byName(String name) {
+		for (EnchantmentHelper e : values()) {
+			if (e.name().equalsIgnoreCase(name)) {
+				return e;
+			}
 		}
 		return null;
 	}
 
-	public static String getMysqlTableCreation(String table)
-	{
-		String sql = "DROP TABLE IF EXISTS " + table + ";\nCREATE TABLE " + table + " (\n\tid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n\tbukkitname VARCHAR(100),\n\tmaxlevel INT,\n\tname VARCHAR(100),\n\tgermanname VARCHAR(100),\n\tdescription TEXT,\n\tprice INT DEFAULT 10000\n);\n";
-		for (EnchantmentHelper ench : EnchantmentHelper.values())
-		{
-			sql += "INSERT INTO " + table + " (bukkitname, maxlevel, name, germanname, description) VALUES ('" + ench.getEnumName() + "', " + ench.getMaxLevel() + ", '" + ench.getTrivialName() + "', '" + ench.getGermanTrivialName() + "', '" + ench.getGermanDescription() + "');\n";
+	public static String getMysqlTableCreation(String table) {
+		String sql = "DROP TABLE IF EXISTS " + table + ";\nCREATE TABLE " + table
+				+ " (\n\tid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n\tbukkitname VARCHAR(100),\n\tmaxlevel INT,\n\tname VARCHAR(100),\n\tgermanname VARCHAR(100),\n\tdescription TEXT,\n\tprice INT DEFAULT 10000\n);\n";
+		for (EnchantmentHelper ench : EnchantmentHelper.values()) {
+			sql += "INSERT INTO " + table + " (bukkitname, maxlevel, name, germanname, description) VALUES ('"
+					+ ench.getEnumName() + "', " + ench.getMaxLevel() + ", '" + ench.getTrivialName() + "', '"
+					+ ench.getGermanTrivialName() + "', '" + ench.getGermanDescription() + "');\n";
 		}
 		return sql;
 	}
 
-	public static void main(String... args)
-	{
+	public static String intToRoman(int value) {
+		String roman = "";
+		if (value == 0) {
+			return "0";
+		}
+		if (value < 0) {
+			return "" + value;
+		}
+		if (value <= 3999) {
+			while (value / 1000 >= 1) {
+				roman += "M";
+				value = value - 1000;
+			}
+			if (value / 900 >= 1) {
+				roman += "CM";
+				value = value - 900;
+			}
+			if (value / 500 >= 1) {
+				roman += "D";
+				value = value - 500;
+			}
+			if (value / 400 >= 1) {
+				roman += "CD";
+				value = value - 400;
+			}
+			while (value / 100 >= 1) {
+				roman += "C";
+				value = value - 100;
+			}
+			if (value / 90 >= 1) {
+				roman += "XC";
+				value = value - 90;
+			}
+			if (value / 50 >= 1) {
+				roman += "L";
+				value = value - 50;
+			}
+			if (value / 40 >= 1) {
+				roman += "XL";
+				value = value - 40;
+			}
+			while (value / 10 >= 1) {
+				roman += "X";
+				value = value - 10;
+			}
+			if (value / 9 >= 1) {
+				roman += "IX";
+				value = value - 9;
+			}
+			if (value / 5 >= 1) {
+				roman += "V";
+				value = value - 5;
+			}
+			if (value / 4 >= 1) {
+				roman += "IV";
+				value = value - 4;
+			}
+			while (value >= 1) {
+				roman += "I";
+				value = value - 1;
+			}
+			return roman;
+		} else {
+			return "" + value;
+		}
+	}
+
+	public static void main(String... args) {
 		System.out.println(getMysqlTableCreation("enchantments"));
 	}
 }
